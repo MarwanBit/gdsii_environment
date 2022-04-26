@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export CXXFLAGS='-O3'
+#export CXXFLAGS='-g -Wall'
+
+mkoctfile --mex poly_boolmex.cpp clipper.cpp
+rm *.o

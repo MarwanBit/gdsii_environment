@@ -1,0 +1,5 @@
+The files in this directory are command line scripts
+for Octave that can be run directly from a Linux/Unix 
+shell prompt. They should be installed in a suitable 
+directory, e.g. /usr/local/bin .
+

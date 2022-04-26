@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category>drc</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name>drc_scripts</group-name>
+ <menu-path>tools_menu.drc.end</menu-path>
+ <interpreter>dsl</interpreter>
+ <dsl-interpreter-name>drc-dsl-xml</dsl-interpreter-name>
+ <text>
+
+#First let's try to implement the width specifications
+#this is sourced from the SOIMUMPS rule guide
+
+
+
+#first we will get all the layers as specified by the soimumps rules
+#assume units are micro meters um
+PMETL = input(5, 0)
+SOI = input(10, 0)
+HOLE = input(11, 0)
+TRCH = input(20, 0)
+BMETL = input(30, 0)
+
+#Thickness's are dealt with when we actually generate the file in GDSII
+#so we don't have to worry about thickness in this script....
+
+
+
+
+
+#
+#
+#
+#now we do length checks on each of the layers 
+#
+#
+#
+
+#return all edges not within 3um&lt;=length&lt;=5000m
+#need to test if 5000 is checked
+PMETL.collect_to_edges.without_length(3, 5000).output(1)
+
+#now for SOI we return all features without min width 6um and do a length check on their lengths
+#now let's extract all the features and put them into a polygon layer
+SOI.collect_to_edge_pairs().polygons().width(6).without_length(0,500).output(2)
+
+#for the hole layer we just return all edges in 0um&lt;=length&lt;3um (the not allowed zone)
+HOLE.collect_to_edges.with_length(0,3).output(3)
+
+#check to make sure the TRCH length is between 200um,5000um and return
+TRCH.collect_to_edges.without_length(200, 5000).output(4)
+TRCH.collect_to_edges.with_length(5000).output(4)
+
+#return all edges not within 100um &lt;= length &lt;= 5000um
+BMETL.collect_to_edges.without_length(100,5000).output(6)
+
+
+
+
+
+#
+#
+#
+#now let's do spacing checks
+#
+#
+#
+
+PMETL.space(3).output(1)
+SOI.space(2).output(2)
+HOLE.space(3).output(3)
+TRCH.space(200).output(4)
+BMETL.space(100).output(6)
+
+
+
+
+
+#
+#
+#
+#now let's do area checks....
+#area is given in micrometers squared
+#
+#
+#
+
+if PMETL.area*(1e-6) &gt; (1e2) - 20
+  puts'PMETL max etched area exceeded'
+end
+
+if SOI.area*(1e-6) &gt; (1e2) - 33
+  puts'SOI max etched area exceeded'
+end
+  
+if TRCH.area*(1e-6) &gt; (1e2) - 20
+  puts'TRCH max etched area exceeded'
+end
+  
+if BMETL.area*(1e-6) &gt; (1e2) - 20
+  puts'BMETL max etched area exceeded'
+end
+
+
+
+
+
+#
+#
+#
+#Now let's embark on trying to implement the next set of DRC Rules (the layer rules!!!)
+#Level to Level Overlays 
+#
+#
+#
+
+#Center to Center Overlay Tolerances + Edge_to_Edge_Bias acounted for in these rules
+
+
+#we must also do an enclosure check for PMETL
+#for PADMETAL TO SOI (+ or - 3 um)
+separation(PMETL, SOI, 6).output(1)
+PMETL.enclosed(SOI, 6).output(1)
+
+#for TRENCH TO SOI (&lt; 50 um)
+#separation(TRCH, SOI, 55).output(4)
+
+#for BLANKETMETAL TO SOI (+ or - 40um)
+#separation(BMETL, SOI, 75).output(6)
+
+
+
+
+</text>
+</klayout-macro>

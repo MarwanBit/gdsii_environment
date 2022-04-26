@@ -1,0 +1,5 @@
+#!/bin/sh
+
+rm -f `find . -name *.mex`
+rm -f `find . -name *.o`
+rm -f `find . -name *~`

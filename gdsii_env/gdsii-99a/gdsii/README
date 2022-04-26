@@ -1,0 +1,90 @@
+
+Matlab / Octave Function Library for GDS II Stream Format
+=========================================================
+
+Ulf Griesmann, NIST, 2008 - 2012 
+ulf.griesmann@nist.gov, ulfgri@gmail.com
+
+This software is in the Public Domain, with the exception
+of the files 'datamatrixmex.c', 'gdsii_excess64dec.c',
+and the functions for Boolean set operations.
+
+New versions of the toolbox can be downloaded from:
+
+https://sites.google.com/site/ulfgri/numerical/gdsii-toolbox
+
+These functions are particularly useful when a layout is the result 
+of a computation. Matlab / Octave can then be used as a macro language
+for writing the layout. 
+
+
+Functions
+=========
+Toolbox functions are grouped into the following directories:
+
+Basic:
+    Contains the low level functions for reading and writing
+    of files in GDS II stream format and defines objects and
+    methods for working with GDS II layouts.
+
+Elements:
+    Contains functions that return gds_element objects.
+
+Structures:
+    Contains functions that return gds_structure objects
+
+Boolean: 
+    The GDS II toolbox contains a method that performs boolean
+    set operations on boundary elements. This is described in more
+    detail in the file: README-Boolean / README-Boolean.pdf
+
+Misc:
+    Functions that don't return gds_* objects.
+    
+Scripts:
+    Command line scripts for Octave that can be run directly
+    from the shell prompt in a Linux / Unix environment.
+
+
+Compiling
+=========
+This software contains several MEX functions, which must be 
+compiled with a C compiler (and a C++ compiler in one case), 
+before the library can be used. In Octave, this is done by
+executing the 
+
+./makemex-octave
+
+script at the shell prompt. In MATLAB the mex functions can be
+compiled by changing to the ./gdsii directory and running
+
+>> makemex
+
+at the MATLAB command prompt.
+
+NOTE:
+The LCC compiler that was included with some versions of MATLAB is
+not able to compile the Clipper library, which is written in C++.
+If no good C compiler is available, the General Polygon Clipper
+library must be used instead of the Clipper library for Boolean set
+operations (but check the license ...). The toolbox must then be 
+compiled with the 
+
+>> makemex_gpc
+
+script.
+
+
+Useful Stuff
+============
+Very good viewer for GDS II files
+http://www.klayout.de
+
+LayoutEditor for inspecting and editing of GDS II files:
+http://www.layouteditor.net
+
+
+Help
+====
+If you find a bug in the software, please send a message to 
+ulf.griesmann@nist.gov and I will try to fix it.

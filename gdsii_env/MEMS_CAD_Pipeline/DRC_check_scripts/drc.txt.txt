@@ -1,0 +1,54 @@
+HOW TO RUN THE DRC SCRIPT ON YOUR FILES....
+
+(1) You should open up the gdsii file you created using MATLAB in some Klayout, afterwards go to tools, DRC, edit DRC Scripts.
+
+(2) After this, click import file in the top left corner area (it's an icon which looks like a stack of paper), and navigate to the location
+of this folder on your device. After clicking on the DRC_CHECK.lydrc file you will be prompted with the script popping up in the navigator.
+
+(3) Once the script is visible within the window, click the green arrow with the exclamation point (run script from the current tab) or SHIFT+F5, this
+button should be located directly above the tab for the DRC_CHECK.lydrc file.
+
+(*) Make sure in your gds file ur layers meet the following correspondence:
+	PMETAL = Layer 5
+	SOI = Layer 10 
+	HOLE = Layer 11 
+	TRCH = Layer 20
+	BMETL = Layer 30
+
+(4) After this runs, error objects should be returned to each of the following layers (1, 2, 3, 4, 6)
+     PMETL Errors (Layer 1)
+     SOI Errors (Layer 2)
+     HOLE Errors (Layer 3)
+     TRCH Errors (Layer 4)
+     BMETL Errors (Layer 6)
+
+(5) Afterwards you may look inside each of these layers to find where errors occured in the design of your SOIMUMPS device, and then you may use edit
+said design until no error objects occur/ your design passes the tests.
+
+
+
+THE SOIMUMPS/DRC RULES BEING CHECKED....
+
+- The SOIMUMPS design rules being implemented are all described in the soimumps_rules.pdf file which is the SOIMUMPS Design Rule handbook, additionally
+  there are some exceptions made/ discrepencies with this script which will be detailed below.....
+
+  - Instead of doing a length check based off of anchoring as described in the SOIMUMPS rules (s that are less than 6µm in width, is to use a maximum 
+    length of 100µm) all lengths in the DRC_CHECK.lydrc file are in microns/micrometers by default.
+
+
+  -  For the 2.3 level to level overlay rules we merely summed the center to center overlay tolerance with the
+     edge to edge bias in order to make a "total tolerance" that we check for inbetween the polygons of each layer,
+     for example if we go to Table 2.3 in the SOIMUMPS design rules pdf the "total tolerance" for PADMETAL to SOI
+     would be 6 um, which is the overlay we would look for inbetween polygons/edges of the layers.
+
+
+KNOWN ISSUES CURRENTLY IN DEVELOPMENT/NEED Work
+
+- It seems that output may not be sent to the right layers, or there seems to 
+be some error where either the input layer's aren't being loaded into the corresponding objects
+PMETL, SOI, HOLE, TRCH, BMETL, etc.
+
+-Error Objects are currently
+
+-Not having the layer correspondence specified in step * causes the program to 
+overwrite with blank layers...
